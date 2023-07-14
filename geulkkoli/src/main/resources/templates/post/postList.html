@@ -97,7 +97,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="post : ${page.list}">
-                        <td><a th:href="@{|/post/read/${post.postId}|(page=${currentPage})}"
+                        <td><a th:href="@{|/post/read/${post.postId}|(page=${page.number},searchType=${searchType},searchWords=${searchWords})}"
                                th:text="${post.title}"></a></td>
                         <td th:align="center" th:text="${post.nickName}"></td>
                         <td th:align="center" th:text="${post.date}"></td>
