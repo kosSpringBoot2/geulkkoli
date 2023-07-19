@@ -110,7 +110,7 @@ public class PostService {
             for (int i = 0; i < postHashTags.size(); i++) {
                 post.deletePostHashTag(postHashTags.get(i).getPostHashTagId());
             }
-            List<HashTag> hashTags = postHashTagService.hashTagSeparator("#일반글"
+            List<HashTag> hashTags = postHashTagService.hashTagSeparator("#일반"
                     + updateParam.getTagListString() + updateParam.getTagCategory() + updateParam.getTagStatus());
             postHashTagService.validatePostHasType(hashTags);
             postHashTagService.addHashTagsToPost(post, hashTags);
