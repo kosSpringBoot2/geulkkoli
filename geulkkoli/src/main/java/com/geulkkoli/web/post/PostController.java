@@ -117,6 +117,7 @@ public class PostController {
             if (bindingResult.hasErrors()) {
                 return "/post/postAddForm";
             }
+            long postId = postService.savePost(post, user).getPostId();
         } catch (IllegalArgumentException e) {
             bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
@@ -199,18 +200,18 @@ public class PostController {
                            @RequestParam(defaultValue = "") String searchWords) {
         try {
             if (bindingResult.hasErrors()) {
-                return "/post/postEditForm";
+                return "post/postEditForm";
             }
             postService.updatePost(postId, updateParam);
         } catch (IllegalArgumentException e) {
             bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
+            return "post/postEditForm";
+
         } catch (AdminTagAccessDenied e) {
             bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
-        }
-        if (bindingResult.hasErrors()) {
-            return "/post/postEditForm";
+            return "post/postEditForm";
         }
         redirectAttributes.addAttribute("updateStatus", true);
         redirectAttributes.addAttribute("page", page);

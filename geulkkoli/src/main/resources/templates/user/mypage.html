@@ -12,19 +12,18 @@
     <link rel="stylesheet" href="/css/nav.css">
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/calendar.css">
-    <link rel="stylesheet" href="/css/calendar.css">
 </head>
 <body>
 <header id="header" th:include="header"></header>
 <span class="private-page-name"><strong id="user-nickname"
-                                        th:text="|${#authentication.principal.nickName + ' 의 페이지'}|"> </strong></span>
+                                        th:text="|${nickName + ' 의 페이지'}|"> </strong></span>
 <div class="nav">
     <div class="div-aside">
         <section class="follow-section">
             <img class="default-profile" src="/images/defaultProfile.png" alt="default Profile Image">
             <div class="profile-info">
                 <a class="following-link"
-                   th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/followers'"
+                   th:attr="data-url='/user/'+${nickName} + '/followers'"
                    onclick="location.href=this.getAttribute('data-url')"
                    th:if="${followsCount.getFollowerCount() > 0}">
                     <em>구독자</em>
@@ -35,7 +34,7 @@
                     <span th:text="${followsCount.getFollowerCount()}"></span>
                 </a>
                 <a class="following-link"
-                   th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/followees'"
+                   th:attr="data-url='/user/'+${nickName} + '/followees'"
                    onclick="location.href=this.getAttribute('data-url')"
                    th:if="${followsCount.getFolloweeCount() > 0}">
                     <em>작가</em>
@@ -70,7 +69,7 @@
             <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0" data-bs-toggle="collapse"
                     data-bs-target="#orders-collapse" aria-expanded="true">
                 <a class=""
-                   th:attr="data-url='/user/'+${#authentication.principal.nickName} + '/favorites'"
+                   th:attr="data-url='/user/'+${nickName} + '/favorites'"
                    onclick="location.href=this.getAttribute('data-url')">
                     <em>좋아요 한 글</em>
                 </a>

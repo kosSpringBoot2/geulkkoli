@@ -89,9 +89,6 @@ public class PostService {
     public Post savePost(AddDTO addDTO, User user) {
         Post writePost = user.writePost(addDTO);
         Post save = postRepository.save(writePost);
-        log.info("addDTO.getTagListString() : " + addDTO.getTagListString());
-        log.info("addDTO.getTagCategory() : " + addDTO.getTagCategory());
-        log.info("addDTO.getTagStatus() : " + addDTO.getTagStatus());
         List<HashTag> hashTags = postHashTagService.hashTagSeparator("#일반" + addDTO.getTagListString() + addDTO.getTagCategory()+ addDTO.getTagStatus());
         log.info("hashTags : " + hashTags);
         postHashTagService.validatePostHasType(hashTags);
@@ -106,9 +103,9 @@ public class PostService {
                 .getUser()
                 .editPost(postId, updateParam);
         ArrayList<PostHashTag> postHashTags = new ArrayList<>(post.getPostHashTags());
-        if (updateParam.getTagListString() != null && updateParam.getTagListString() != "") {
-            for (int i = 0; i < postHashTags.size(); i++) {
-                post.deletePostHashTag(postHashTags.get(i).getPostHashTagId());
+        if (updateParam.getTagListString() != null && !updateParam.getTagListString().equals("")) {
+            for (PostHashTag postHashTag : postHashTags) {
+                post.deletePostHashTag(postHashTag.getPostHashTagId());
             }
             List<HashTag> hashTags = postHashTagService.hashTagSeparator("#일반"
                     + updateParam.getTagListString() + updateParam.getTagCategory() + updateParam.getTagStatus());
@@ -127,14 +124,14 @@ public class PostService {
         Optional<User> loggingUser = userRepository.findById(loggingUserId);
         ArrayList<PostHashTag> postHashTags = new ArrayList<>(post.getPostHashTags());
         if (loggingUser.isPresent() && post.getUser().equals(loggingUser.get())) {
-            User user = loggingUser.get();
-            user.deletePost(post);
             for (PostHashTag postHashTag : postHashTags) {
                 post.deletePostHashTag(postHashTag.getPostHashTagId());
             }
+            Post post1 = loggingUser.get().deletePost(post);
+            postRepository.save(post1);
         }
 
-        postRepository.delete(post);
+        throw new IllegalArgumentException("해당 게시글을 삭제할 권한이 없습니다.");
     }
 
     @Transactional

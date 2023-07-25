@@ -48,10 +48,10 @@ public class PostHashTagService {
 
     //게시판을 들어갔을 때, 게시글을 검색할 때 등 게시글을 가져오는 모든 경우에 쓰입니다.
     public Page<PostRequestListDTO> searchPostsListByHashTag(Pageable pageable, String searchType, String searchWords) {
-
         String searchWord = searchWordExtractor(searchWords);
         List<HashTag> tags = hashTagSeparator(searchWords);
-
+        log.info("serachWord: {}", searchWord);
+        log.info("tags: {}", tags);
         List<Post> posts = searchPostContainAllHashTags(tags);
         List<Post> resultList;
         switch (searchType) {
@@ -103,17 +103,14 @@ public class PostHashTagService {
     public List<HashTag> hashTagSeparator(String searchWords) {
         Set<HashTag> hashTags = new LinkedHashSet<>();
         String[] splitter = searchWords.split("#");
-        log.info("splitter: {}", Arrays.stream(splitter).collect(Collectors.toUnmodifiableList()));
         for (int i = 1; i < splitter.length; i++) {
             String stripper = splitter[i].strip();
-            String trim = stripper.trim();
-            log.info("trim: {}", trim);
-            HashTag hashTagByHashTagName = hashTagRepository.findByHashTagName(trim);
+            HashTag hashTagByHashTagName = hashTagRepository.findByHashTagName(stripper);
             log.info("hashTagByHashTagName: {}", hashTagByHashTagName);
             if (hashTagByHashTagName != null) {
                 hashTags.add(hashTagByHashTagName);
             } else {
-                HashTag save = hashTagRepository.save(new HashTag(trim, HashTagType.GENERAL));
+                HashTag save = hashTagRepository.save(new HashTag(stripper, HashTagType.GENERAL));
                 hashTags.add(save);
             }
         }

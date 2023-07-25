@@ -91,34 +91,6 @@ public class SocialSignUpDto {
         return clientregistrationName;
     }
 
-    public void changeUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public void changePassword(String password) {
-        this.password = password;
-    }
-
-    public void changeVerifyPassword(String verifyPassword) {
-        this.verifyPassword = verifyPassword;
-    }
-
-    public void changeNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public void changeEmail(String email) {
-        this.email = email;
-    }
-
-    public void changePhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
-    }
-
-    public void changeGender(String gender) {
-        this.gender = gender;
-    }
-
     @Override
     public String toString() {
         return "SocialSignUpDto{" +

@@ -116,12 +116,6 @@ public class User extends ConfigDate {
     }
 
     // 해당 유저가 쓴 게시글 찾기
-    private Post findPost(Long postId) {
-        return this.posts.stream()
-                .filter(post -> post.getPostId().equals(postId))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchPostException("해당 게시글이 없습니다."));
-    }
 
     // 유저가 쓴 게시글 수정하기
     public Post editPost(Long postId, EditDTO editDTO) {

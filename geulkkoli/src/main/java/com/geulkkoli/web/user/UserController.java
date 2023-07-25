@@ -36,7 +36,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Comparator;
 import java.util.List;
@@ -66,14 +65,12 @@ public class UserController {
 
     @GetMapping("/{nickName}")
     public ModelAndView getMyPage(@PathVariable("nickName") String nickName) {
-        ConnectedSocialInfos connectedInfos = socialInfoFindService.findAllByNickName(nickName);
         User user = userFindService.findByNickName(nickName);
         Integer followee = followFindService.countFolloweeByFollowerId(user.getUserId());
         Integer follower = followFindService.countFollowerByFolloweeId(user.getUserId());
         FollowsCount followsCount = FollowsCount.of(followee, follower);
-        ModelAndView modelAndView = new ModelAndView("user/mypage", "connectedInfos", connectedInfos);
+        ModelAndView modelAndView = new ModelAndView("user/mypage","nickName", nickName);
         modelAndView.addObject("followsCount", followsCount);
-
         return modelAndView;
     }
 
@@ -81,9 +78,8 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<CalendarDto> calendaring(@PathVariable("nickName") String nickName) {
         User user = userFindService.findByNickName(nickName);
-
-        List<String> allPostDatesByOneUser = postFindService.getCreatedAts(user);
-        CalendarDto calendarDto = new CalendarDto(user.getUserName(), user.getSignUpDate(), allPostDatesByOneUser);
+        List<String> allPostWriteDatesByOneUser = postFindService.findPostWriteDate(user);
+        CalendarDto calendarDto = new CalendarDto(user.getUserName(), user.getSignUpDate(), allPostWriteDatesByOneUser);
         log.info("calendarDto : {}", calendarDto.getAllPostDatesByOneUser());
         return ResponseEntity.ok(calendarDto);
     }
@@ -108,7 +104,6 @@ public class UserController {
         followInfos.checkSubscribe(userIdByFollowedEachOther);
         ModelAndView modelAndView = new ModelAndView("user/mypage/followerdetail", "followers", followInfos);
         modelAndView.addObject("allCount", follower);
-
         return modelAndView;
     }
 
