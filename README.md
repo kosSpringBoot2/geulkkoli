@@ -66,7 +66,7 @@ spring-boot-starter-oauth2-client
 Web Language
 Javascript
 Jquery
-프로젝트 아키텍처
+
 
 디렉토리 구조
  ```
