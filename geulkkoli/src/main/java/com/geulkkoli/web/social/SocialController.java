@@ -132,6 +132,4 @@ public class SocialController {
         authorities.add(new SimpleGrantedAuthority(user.authority()));
         return CustomAuthenticationPrinciple.from(dto, authorities, AccountStatus.ACTIVE);
     }
-
-
 }

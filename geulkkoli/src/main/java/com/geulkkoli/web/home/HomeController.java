@@ -66,6 +66,12 @@ public class HomeController {
         return "user/loginForm";
     }
 
+    @PostMapping("/loginPage")
+    public String processLoginForm(@ModelAttribute("loginForm") LoginFormDto form) {
+
+        return "user/loginForm"; // 실패 메시지를 포함한 GET 요청으로 리다이렉트
+    }
+
     @GetMapping("/findEmail")
     public String findEmailForm(@ModelAttribute("findEmailForm") FindEmailFormDto form) {
         return FIND_EMAIL_FORM;

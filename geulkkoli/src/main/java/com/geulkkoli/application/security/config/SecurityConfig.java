@@ -67,7 +67,7 @@ public class SecurityConfig {
                     auth.mvcMatchers("/user/**").hasRole("USER");
                     auth.mvcMatchers(HttpMethod.GET, "/social/oauth2/signup").hasAnyRole("GUEST");
                     auth.mvcMatchers("/post/add/**", "/post/update/**", "/post/delete/**").hasAnyRole("USER", "ADMIN");
-                    auth.mvcMatchers(LOGIN_PAGE).anonymous();
+                    auth.mvcMatchers(LOGIN_PAGE).permitAll();
                     auth.mvcMatchers(HttpMethod.GET, "/", "/post/read/**", "/post/list/**", "/post/search/**", "/post/category/*")
                             .permitAll();
                     auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll(); // 정적 리소스들(css,js)등을 권장 방식에 맞게 인증 체크에서 제외 시켰다
@@ -76,6 +76,7 @@ public class SecurityConfig {
                 .loginPage(LOGIN_PAGE)
                 .loginProcessingUrl("/login-process")
                 .defaultSuccessUrl("/")
+                .failureHandler(loginFailureHandler)
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .and()
@@ -83,7 +84,6 @@ public class SecurityConfig {
                                 userInfoEndpointConfig -> userInfoEndpointConfig
                                         .userService(customOauth2UserService)
                         ).successHandler(loginSuccessHandler)
-                        .failureHandler(loginFailureHandler)
                 )
                 .userDetailsService(userSecurityService)
                 .logout()

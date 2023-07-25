@@ -1,6 +1,5 @@
 package com.geulkkoli.domain.social.service;
 
-import com.geulkkoli.domain.social.SocialInfoRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SocialInfoRepository extends JpaRepository<SocialInfo, Long>, SocialInfoRepositoryCustom {
+public interface SocialInfoRepository extends JpaRepository<SocialInfo, Long> {
     Optional<SocialInfo> findSocialInfoBySocialTypeAndSocialId(String socialType, String socialId);
 
     Optional<SocialInfo> findSocialInfoBySocialTypeAndAndUser_Email(String socialType, String email);

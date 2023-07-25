@@ -27,7 +27,7 @@ import java.util.Optional;
 
 @Slf4j
 @Component
-public class LoginFailureHandler implements  AuthenticationFailureHandler {
+public class LoginFailureHandler implements AuthenticationFailureHandler {
 
 
     @Autowired
@@ -36,7 +36,7 @@ public class LoginFailureHandler implements  AuthenticationFailureHandler {
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        log.info("exception = {}", exception);
+        log.info("exception = {}", exception.getMessage());
         String errorMessage;
         if (exception instanceof BadCredentialsException) {  // 비밀번호 틀렸을 때
             errorMessage = messageSource.getMessage("error.BadCredentialsException", null, Locale.KOREA);
@@ -48,19 +48,18 @@ public class LoginFailureHandler implements  AuthenticationFailureHandler {
             errorMessage = messageSource.getMessage("error.AuthenticationCredentialsNotFoundException", null, Locale.KOREA);
         } else if (exception instanceof LockedException) {
             errorMessage = messageSource.getMessage("error.LockedException", null, Locale.KOREA);
-        } else if (exception instanceof OAuth2AuthenticationException){
+        } else if (exception instanceof OAuth2AuthenticationException) {
             errorMessage = messageSource.getMessage("error.OAuth2AuthenticationException", null, Locale.KOREA);
-        }
-
-        else {
+        } else {
             errorMessage = messageSource.getMessage("error.OtherException", null, Locale.KOREA);
         }
 
         log.info("error message {}", errorMessage);
 
         request.setAttribute("loginError", errorMessage);
+        String requestURI = request.getRequestURI();
+        log.info("requestURI = {}", requestURI);
 
-        request.getRequestDispatcher("/loginPage").forward(request, response);
-    }
-
+        request.setAttribute("loginError", errorMessage);
+        request.getRequestDispatcher("/loginPage").forward(request, response);}
 }

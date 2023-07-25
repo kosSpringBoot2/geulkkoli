@@ -21,19 +21,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.lang.Boolean.*;
 import static java.lang.Boolean.TRUE;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserSecurityService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
 
     @Override
-    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         log.info("loadUserByUsername : {}", email);
         Optional<User> findByEmailUser = userRepository.findByEmail(email);

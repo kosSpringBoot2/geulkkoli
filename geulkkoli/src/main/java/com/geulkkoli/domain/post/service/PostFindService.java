@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostFindService {
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public Post findById(Long postId) {
@@ -76,7 +75,7 @@ public class PostFindService {
     }
 
     @Transactional(readOnly = true)
-    public List<String> getCreatedAts(User user) {
+    public List<String> findPostWriteDate(User user) {
         Set<String> createdAt = postRepository.findCreatedAt(user.getUserId());
         return createdAt.stream().collect(Collectors.toUnmodifiableList());
     }
