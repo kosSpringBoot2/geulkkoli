@@ -86,21 +86,34 @@
 
     <hr class="my-4">
     <div class="row">
-        <div sec:authorize="hasRole('USER')"
+        <div sec:authorize="hasAnyRole('ADMIN', 'USER')"
              th:with="userNickName=${#authentication.principal.nickName}">
             <div class="col">
-
                 <button class="w-100 btn btn-primary" onclick="location.href='postUpdateForm.html'"
                         th:onclick="|location.href='@{/post/update/{postId}(postId=${post.postId},page=${pageNumber},searchType=${searchType},searchWords=${searchWords})}'|"
                         th:if="${#strings.equals(authorUser.nickName, userNickName)}"
+                        sec:authorize="hasRole('USER')"
                         type="button">게시글 수정
                 </button>
+                <button class="w-100 btn btn-primary" onclick="location.href='postUpdateForm.html'"
+                        th:onclick="|location.href='@{/admin/update/{postId}(postId=${post.postId},page=${pageNumber},searchType=${searchType},searchWords=${searchWords})}'|"
+                        sec:authorize="hasRole('ADMIN')"
+                        type="button">게시글 수정
+                </button>
+            </div>
 
+            <div class="col" sec:authorize="hasRole('ADMIN')">
+                <form th:id="deleteByAdmin" th:onclick="deleteByAdmin([[${post.postId}]])" method="post">
+                    <input class="csrf_input" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <input class="csrf_input" type="hidden" th:name="${_csrf.getHeaderName()}">
+                    <button type="button" class="w-100 btn btn-danger" id="deleteByAdminButton">삭제</button>
+                </form>
             </div>
 
             <!-- Button trigger modal -->
             <div class="col">
                 <button type="button" class="w-100 btn btn-primary" data-bs-toggle="modal" data-bs-target="#deletePost"
+                        sec:authorize="hasRole('USER')"
                         th:if="${#strings.equals(authorUser.nickName, userNickName)}">삭제
                 </button>
             </div>
@@ -128,6 +141,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -303,6 +317,32 @@
     });
 
     document.getElementById("deletePostButton").addEventListener("click", deletePost);
+
+    function deleteByAdmin(postId) {
+        var headerName = document.getElementsByClassName("csrf_input")[1].getAttribute("name");
+        var token = document.getElementsByClassName("csrf_input")[0].getAttribute("value");
+        const requestOptions = {
+            headers: {
+                'header': headerName,
+                'X-Requested-With': 'XMLHttpRequest',
+                'accept': 'application/json',
+                'X-CSRF-Token': token
+            },
+            method: 'DELETE'
+        };
+        console.log("deletePostId=" + postId);
+        fetch('/admin/delete/'+postId, requestOptions
+        ).then(function (response) {
+            window.location = "/post/list";
+        }).then(function (text) {
+            console.log('Request successful', text);
+            alert(text); // 비동기 통신 콜백(체인 메소드)으로 text값을 리턴받아 출력
+        }).catch(function (error) {
+            console.log('Request failed', error)
+        });
+    }
+
+    document.getElementById("deleteByAdminButton").addEventListener("click", deleteByAdmin);
 
 </script>
 
