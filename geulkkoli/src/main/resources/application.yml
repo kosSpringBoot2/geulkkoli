@@ -115,6 +115,6 @@ server:
     path: /error
     include-exception: false
     include-message: never
-
+  port: 9000
 comm:
   uploadPath: /Users/ryun/Desktop
