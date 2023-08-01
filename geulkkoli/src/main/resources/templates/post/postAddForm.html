@@ -68,15 +68,14 @@
                 </div>
 
                 <div class="mb-3">
-                    <label th:text="해시태그">해시태그
+                    <label th:text="해시태그">해시태그</label>
                         <input class="form-control"
                                type="text"
                                id="tagListString"
                                th:field="*{tagListString}" form="add"
                                rows="8" placeholder="#태그1 #태그2 ...">
-                    </label>
-                    <div class="field-error" th:errors="*{tagListString}">태그 오류
-                    </div>
+                    <div class="field-error" th:errors="*{tagListString}">태그 오류</div>
+
                 </div>
 
                 <hr class="my-4">

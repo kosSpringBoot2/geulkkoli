@@ -113,19 +113,21 @@ public class PostController {
         redirectAttributes.addAttribute("page", request.getSession().getAttribute("pageNumber"));
 
         User user = userFindService.findById(post.getAuthorId());
+        long postId = 0;
         try {
             if (bindingResult.hasErrors()) {
                 return "/post/postAddForm";
             }
-            long postId = postService.savePost(post, user).getPostId();
+            postId = postService.savePost(post, user).getPostId();
         } catch (IllegalArgumentException e) {
             bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
+            return "/post/postAddForm";
         } catch (AdminTagAccessDenied e) {
             bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
+            return "/post/postAddForm";
         }
-        long postId = postService.savePost(post, user).getPostId();
         redirectAttributes.addAttribute("postId", postId);
         response.addCookie(new Cookie(URLEncoder.encode(post.getNickName(), "UTF-8"), "done"));
         return "redirect:/post/read/{postId}";
@@ -200,18 +202,18 @@ public class PostController {
                            @RequestParam(defaultValue = "") String searchWords) {
         try {
             if (bindingResult.hasErrors()) {
-                return "post/postEditForm";
+                return "/post/postEditForm";
             }
             postService.updatePost(postId, updateParam);
         } catch (IllegalArgumentException e) {
             bindingResult.rejectValue("tagCategory", "Tag.Required", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
-            return "post/postEditForm";
-
         } catch (AdminTagAccessDenied e) {
             bindingResult.rejectValue("tagListString", "Tag.Denied", new String[]{e.getMessage()}, e.toString());
             e.getStackTrace();
-            return "post/postEditForm";
+        }
+        if (bindingResult.hasErrors()) {
+            return "/post/postEditForm";
         }
         redirectAttributes.addAttribute("updateStatus", true);
         redirectAttributes.addAttribute("page", page);

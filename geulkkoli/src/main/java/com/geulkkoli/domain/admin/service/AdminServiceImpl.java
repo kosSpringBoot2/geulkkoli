@@ -74,6 +74,10 @@ public class AdminServiceImpl implements AdminService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("No post found id matches:" + postId));
         Post deletePost = post.getUser().deletePost(post);
+        ArrayList<PostHashTag> postHashTags = new ArrayList<>(post.getPostHashTags());
+        for (PostHashTag postHashTag : postHashTags) {
+            post.deletePostHashTag(postHashTag.getPostHashTagId());
+        }
         postRepository.delete(deletePost);
     }
 
